@@ -270,6 +270,48 @@ def test_stop_marks_session_recorder_lost_on_identity_mismatch_and_finalizes_on_
     assert "failure" not in finalized
 
 
+def _refuse_pidfd(pid: int) -> int:
+    raise PermissionError(1, "Operation not permitted")
+
+
+def test_supervisor_is_used_when_pidfds_are_refused(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(EVIDENCE, "platform_name", lambda: "linux")
+    monkeypatch.setattr(EVIDENCE.sys, "platform", "linux")
+    monkeypatch.setattr(EVIDENCE.os, "pidfd_open", _refuse_pidfd, raising=False)
+    assert EVIDENCE.uses_supervisor() is True
+
+    monkeypatch.setattr(EVIDENCE.os, "pidfd_open", lambda pid: os.open(os.devnull, os.O_RDONLY), raising=False)
+    assert EVIDENCE.uses_supervisor() is False
+
+
+def test_stop_marks_session_recorder_lost_when_pidfd_is_refused(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    identity = EVIDENCE.process_identity(os.getpid())
+    assert identity is not None
+    monkeypatch.setattr(EVIDENCE, "platform_name", lambda: "linux")
+    monkeypatch.setattr(EVIDENCE.os, "pidfd_open", _refuse_pidfd, raising=False)
+    with pytest.raises(EVIDENCE.EvidenceError, match="cannot open a pidfd for recorder PID 4242"):
+        EVIDENCE.stop_recorder({"pid": 4242})
+
+    raw_video = tmp_path / "raw.ts"
+    raw_video.write_bytes(b"raw")
+    session_path = tmp_path / "session.json"
+    EVIDENCE.atomic_write_json(
+        session_path,
+        {
+            "status": "recording",
+            "mode": "direct",
+            "raw_video": str(raw_video),
+            "recorder_identity": identity,
+            "annotations": [],
+        },
+    )
+    with pytest.raises(EVIDENCE.EvidenceError, match="recorder_lost"):
+        EVIDENCE.command_stop(argparse.Namespace(session=str(session_path)))
+    lost = json.loads(session_path.read_text())
+    assert lost["status"] == "recorder_lost"
+    assert "cannot open a pidfd" in lost["failure"]
+
+
 def test_recorder_lost_retry_refuses_to_finalize_while_recorder_is_alive(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):

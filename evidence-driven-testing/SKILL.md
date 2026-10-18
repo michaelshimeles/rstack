@@ -69,7 +69,8 @@ Python 3 and FFmpeg.
   the recorder is killed hard or crashes, what was captured still probes and
   renders. `stop` remuxes or re-encodes it into a standard `evidence.mp4`.
 - **How stopping works**: on Linux the recorder is signalled through a pidfd.
-  On macOS and Windows `start` launches a small supervisor process that owns
+  On macOS and Windows, and on Linux when the kernel or a seccomp policy
+  refuses pidfds, `start` launches a small supervisor process that owns
   the ffmpeg child, and `stop` asks it (via `stop.request` in the session
   folder) to interrupt, then terminate, then kill; it writes
   `recorder-exit.json` when done. Nothing ever signals a bare PID, so a

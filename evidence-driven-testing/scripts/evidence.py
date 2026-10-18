@@ -7,7 +7,8 @@ stop — SIGKILL, TerminateProcess, a crashed recorder — still leaves a playab
 probe-able file; `stop` remuxes or re-encodes it into a standard MP4.
 
 Stopping the recorder never signals a bare, reusable PID. On Linux the
-recorder is signalled through a pidfd. Everywhere else `start` launches a
+recorder is signalled through a pidfd when the process can open one.
+Everywhere else `start` launches a
 small supervisor that owns the ffmpeg child: a parent holds an exited child
 until it reaps it, so the child's PID cannot be recycled and the supervisor is
 the only process that ever signals it. `stop` asks the supervisor (via a
@@ -487,9 +488,20 @@ def spawn_detached(command: list[str], log_file: Any, env: dict[str, str]) -> su
     return subprocess.Popen(command, **kwargs)
 
 
+def pidfd_usable() -> bool:
+    """Whether this process can open pidfds. Old kernels and seccomp policies can refuse."""
+    if not (platform_name() == "linux" and hasattr(os, "pidfd_open") and sys.platform.startswith("linux")):
+        return False
+    try:
+        os.close(os.pidfd_open(os.getpid()))
+    except OSError:
+        return False
+    return True
+
+
 def uses_supervisor() -> bool:
-    """Linux signals the recorder through a pidfd; every other OS goes via the supervisor."""
-    return not (platform_name() == "linux" and hasattr(os, "pidfd_open") and sys.platform.startswith("linux"))
+    """Linux signals the recorder through a pidfd when it can open one; otherwise the supervisor owns it."""
+    return not pidfd_usable()
 
 
 # --------------------------------------------------------------------------- #
@@ -626,6 +638,8 @@ def stop_recorder(expected: dict[str, Any], grace_seconds: float = 3.0) -> None:
         pidfd = os.pidfd_open(pid)
     except ProcessLookupError:
         return
+    except OSError as error:
+        raise EvidenceError(f"cannot open a pidfd for recorder PID {pid}: {error}") from error
     try:
         current = process_identity(pid)
         if current is None:

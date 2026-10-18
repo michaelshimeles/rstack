@@ -7,7 +7,7 @@
 #
 # Environment:
 #   IMAGE_ADAPTER    Storage adapter to use (default: 0x0st)
-#                    Available: 0x0st, gist, blob
+#                    Available: 0x0st, blob
 #
 # Adapter-specific environment variables:
 #   blob:  BLOB_UPLOAD_URL - Custom upload endpoint
@@ -15,7 +15,6 @@
 # Examples:
 #   ./upload-and-copy.sh before.png after.png
 #   ./upload-and-copy.sh before.png after.png --markdown
-#   IMAGE_ADAPTER=gist ./upload-and-copy.sh before.png after.png --markdown
 
 set -e
 
@@ -51,7 +50,7 @@ if [[ -z "$BEFORE_FILE" || -z "$AFTER_FILE" ]]; then
     echo ""
     echo "Environment:"
     echo "  IMAGE_ADAPTER    Storage adapter (default: 0x0st)"
-    echo "                   Available: 0x0st, gist, blob"
+    echo "                   Available: 0x0st, blob"
     exit 1
 fi
 

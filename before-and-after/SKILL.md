@@ -93,9 +93,6 @@ npx @vercel/before-and-after url1 url2
 ```bash
 # Default (0x0.st - no signup needed)
 ./scripts/upload-and-copy.sh before.png after.png --markdown
-
-# GitHub Gist
-IMAGE_ADAPTER=gist ./scripts/upload-and-copy.sh before.png after.png --markdown
 ```
 
 ## Vercel Deployment Protection

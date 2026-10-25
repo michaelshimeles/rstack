@@ -7,6 +7,18 @@ A collection of [agent skills](https://code.claude.com/docs/en/skills) for Claud
 
 ## Available skills
 
+### [agent-qa](agent-qa/SKILL.md)
+
+Runs selected web or mobile regressions with agent-qa from vostride and reviews recorded results. Its advanced memidex memory and self-improvement support application knowledge, replay and test reliability. The skill traces failures to evidence and separates historical knowledge use from a record's current state and provenance.
+
+Use it when:
+
+- Running natural-language application tests in a configured agent-qa project
+- Reviewing a saved run against its target and build
+- Investigating the knowledge behind a result before proposing a correction
+
+> Original instructions under MIT, with a license in the folder. Requires a configured agent-qa project and Node.js 24+. The external agent-qa runtime is separately licensed FSL-1.1-ALv2 and is not bundled.
+
 ### [before-and-after](before-and-after/SKILL.md)
 
 Captures before/after screenshots of web pages or elements and outputs a PR-ready markdown comparison table. It drives the `@vercel/before-and-after` CLI.

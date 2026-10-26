@@ -58,6 +58,7 @@ Clone the repo and copy skill folders into your agent's skills directory. For Cl
 ```bash
 git clone https://github.com/michaelshimeles/rstack.git
 cd rstack
+mkdir -p ~/.claude/skills/
 cp -r new-feature code-structure evidence-driven-testing before-and-after greploop greploop-apps unslop ~/.claude/skills/
 ```
 

@@ -1,6 +1,6 @@
 # rstack
 
-rstack is [@michaelshimeles](https://github.com/michaelshimeles)'s agent development stack: seven [agent skills](https://code.claude.com/docs/en/skills) and an [`AGENTS.md`](AGENTS.md) workflow that tells a coding agent how to take a change from a clean branch to a reviewed pull request. It is written for Claude Code, Cursor, Codex, and other agents that load `SKILL.md` folders.
+rstack is [@michaelshimeles](https://github.com/michaelshimeles)'s agent development stack: seven [agent skills](https://code.claude.com/docs/en/skills), the external `stageshow` skill, and an [`AGENTS.md`](AGENTS.md) workflow that tells a coding agent how to take a change from a clean branch to a reviewed pull request. It is written for Claude Code, Cursor, Codex, and other agents that load `SKILL.md` folders.
 
 [![skills.sh](https://skills.sh/b/michaelshimeles/rstack)](https://skills.sh/michaelshimeles/rstack)
 
@@ -29,6 +29,7 @@ Use it if you want an agent to work in its own worktree, follow your project's a
 | [`before-and-after`](before-and-after/SKILL.md) | Captures before/after screenshots of web pages or elements for visual comparison and outputs a PR-ready markdown table. |
 | [`greploop`](greploop/SKILL.md) | Address Greptile feedback on a PR, MR, or shelved changelist through bounded review and fix cycles. |
 | [`greploop-apps`](greploop-apps/SKILL.md) | Run the greploop workflow with the `@greptile-apps` trigger when the normal trigger refuses a large PR. Requires `greploop`. |
+| [`stageshow`](https://github.com/benjitaylor/skills) | External. Builds faux product UI as stills or animated cursor demos: app windows, dashboards, terminals, bento grids. React and plain CSS. |
 | [`unslop`](unslop/SKILL.md) | Cut AI tells from text you write or edit for a human reader. Apply before committing, posting, or sending. |
 
 ### Skill notes
@@ -47,7 +48,10 @@ The [`skills`](https://skills.sh) CLI installs to Claude Code, Cursor, Codex, an
 
 ```bash
 npx skills add michaelshimeles/rstack
+npx skills add benjitaylor/skills --skill stageshow
 ```
+
+The second command installs `stageshow`, which lives in [benjitaylor/skills](https://github.com/benjitaylor/skills) rather than this repo. Pass the same `-a` and `-g` flags to both commands.
 
 Useful flags: `--list` shows the skills without installing, `-s <name>` picks skills, `-a <agent>` picks agents (`claude-code`, `cursor`, `codex`), and `-g` installs at user level instead of project level.
 
@@ -62,7 +66,7 @@ mkdir -p ~/.claude/skills/
 cp -r new-feature code-structure evidence-driven-testing before-and-after greploop greploop-apps unslop ~/.claude/skills/
 ```
 
-`greploop-apps` only works with `greploop` installed beside it.
+`greploop-apps` only works with `greploop` installed beside it. `stageshow` is not in this repo; install it for Claude Code at user level with `npx skills add benjitaylor/skills --skill stageshow -a claude-code -g`.
 
 ### The workflow file
 
@@ -103,6 +107,7 @@ Run `python3 -m pytest tests/ -q` and `git diff --check`. The tests need Python 
 | `before-and-after` | [vercel-labs/before-and-after](https://github.com/vercel-labs/before-and-after) | PolyForm Shield 1.0.0 |
 | `greploop` | [greptileai/skills](https://github.com/greptileai/skills) | MIT |
 | `greploop-apps` | local entrypoint derived from greptileai's greploop | MIT |
+| `stageshow` | [benjitaylor/skills](https://github.com/benjitaylor/skills), installed from upstream, not vendored | see upstream |
 | `unslop` | [cursor/plugins (pstack)](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop) | MIT |
 
 The repo has no top-level license file. Only the vendored skills ship a license.

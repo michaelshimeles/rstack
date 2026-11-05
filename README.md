@@ -66,7 +66,7 @@ mkdir -p ~/.claude/skills/
 cp -r new-feature code-structure evidence-driven-testing before-and-after greploop greploop-apps unslop ~/.claude/skills/
 ```
 
-`greploop-apps` only works with `greploop` installed beside it. `stageshow` is not in this repo; install it with `npx skills add benjitaylor/skills --skill stageshow`.
+`greploop-apps` only works with `greploop` installed beside it. `stageshow` is not in this repo; install it for Claude Code at user level with `npx skills add benjitaylor/skills --skill stageshow -a claude-code -g`.
 
 ### The workflow file
 

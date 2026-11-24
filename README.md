@@ -8,6 +8,10 @@ Use it if you want an agent to work in its own worktree, follow your project's a
 
 ## The workflow
 
+![rstack workflow diagram: a task request goes through Isolate (/new-feature), Build (/code-structure), Prove (/evidence-driven-testing), and Ship, where /greploop re-runs Greptile until the PR scores 5/5 or hits a stop condition](docs/assets/workflow.png)
+
+To edit the diagram, open [`docs/assets/workflow.excalidraw`](docs/assets/workflow.excalidraw) on [excalidraw.com](https://excalidraw.com).
+
 [`AGENTS.md`](AGENTS.md) picks the steps that fit each task. Read-only reviews and investigations skip all of them. Small documentation edits get an isolated branch and content checks, with no runtime evidence or bot review.
 
 1. **Isolate.** `/new-feature` puts the edit in its own Git worktree and branch from `origin/main`, after checking open PRs for overlap. Nothing gets built on `main`.

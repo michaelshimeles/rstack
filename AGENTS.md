@@ -20,6 +20,8 @@ this repo and can be copied into other repos with their checks and conventions.
 2. **Build.** Use `/code-structure` when extracting shared operations or
    choosing boundaries. Follow the project's existing architecture; the
    service layer pattern is a default for projects without a convention.
+   Use `/stageshow` when the task calls for faux product UI: mocked app
+   windows, hero or feature-card illustrations, or animated cursor demos.
 3. **Prove.** Run relevant checks. Use `/evidence-driven-testing` for changed
    runtime behavior: record the failure before fixing it and the success
    afterward. For documentation, inspect the changed instructions and verify
@@ -111,6 +113,7 @@ Keep generated evidence under the ignored `.artifacts/` directory.
 |---|---|
 | `new-feature`, `code-structure`, `evidence-driven-testing` | this repo |
 | `before-and-after` | this repo, vendored from [vercel-labs/before-and-after](https://github.com/vercel-labs/before-and-after) (or `npx skills add vercel-labs/before-and-after`) |
+| `stageshow` | external, installed with `npx skills add benjitaylor/skills --skill stageshow` from [benjitaylor/skills](https://github.com/benjitaylor/skills) |
 | `greploop` | this repo, vendored from [greptileai/skills](https://github.com/greptileai/skills) |
 | `greploop-apps` | this repo, compatibility entrypoint requiring `greploop` |
 | `unslop` | this repo, vendored from [cursor/plugins (pstack)](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop); frontmatter edited so agents apply it unprompted (`disable-model-invocation` dropped, description scoped to text the agent writes or edits for people), body untouched |
